@@ -43,7 +43,7 @@
 		"transaction",
 		"retry",
 		"serializable",
-		"serialization failure",
+		"serialization-failure",
 		"deadlock",
 		"40001",
 		"40P01",
@@ -56,7 +56,7 @@
 		"drizzle",
 		"prisma",
 		"typeorm",
-		"after commit",
+		"after-commit",
 		"backoff"
 	],
 	"devDependencies": {
