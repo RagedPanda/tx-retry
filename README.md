@@ -1,15 +1,15 @@
-# tx-retry
+# @ragedpanda/tx-retry
 
-[![npm version](https://img.shields.io/npm/v/tx-retry)](https://www.npmjs.com/package/tx-retry)
+[![npm version](https://img.shields.io/npm/v/@ragedpanda/tx-retry)](https://www.npmjs.com/package/@ragedpanda/tx-retry)
 [![CI](https://github.com/RagedPanda/tx-retry/actions/workflows/ci.yml/badge.svg)](https://github.com/RagedPanda/tx-retry/actions/workflows/ci.yml)
 [![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/RagedPanda/tx-retry/actions/workflows/ci.yml)
-[![types](https://img.shields.io/npm/types/tx-retry)](https://www.npmjs.com/package/tx-retry)
-[![license](https://img.shields.io/npm/l/tx-retry)](LICENSE)
+[![types](https://img.shields.io/npm/types/@ragedpanda/tx-retry)](https://www.npmjs.com/package/@ragedpanda/tx-retry)
+[![license](https://img.shields.io/npm/l/@ragedpanda/tx-retry)](LICENSE)
 
 Run a database transaction again, from the start, when it fails with a serialization failure, a deadlock, a lock wait timeout or a busy SQLite database. Includes backoff with jitter, an `AbortSignal`, and `afterCommit` hooks that run once. Works with node-postgres, Kysely, Drizzle, Prisma, TypeORM, `node:sqlite` and better-sqlite3, and has no dependencies.
 
 ```ts
-import {fromPgPool, runTransaction} from 'tx-retry';
+import {fromPgPool, runTransaction} from '@ragedpanda/tx-retry';
 
 const order = await runTransaction(fromPgPool(pool, {isolationLevel: 'serializable'}), async (client, {afterCommit}) => {
 	const {rows} = await client.query('INSERT INTO orders (item) VALUES ($1) RETURNING *', [item]);
@@ -33,7 +33,7 @@ tx-retry is that missing piece. It reruns the transaction callback in a new tran
 ## Install
 
 ```sh
-npm install tx-retry
+npm install @ragedpanda/tx-retry
 ```
 
 Node.js 20 or later (CI tests 22 and 24). tx-retry ships ESM and CommonJS builds with types, and has no dependencies, not even on your driver: each adapter is typed by the shape of the method it calls.
@@ -52,7 +52,7 @@ It returns what `work` returns from the attempt that commits.
 
 ```ts
 import pg from 'pg';
-import {fromPgClient, fromPgPool, runTransaction} from 'tx-retry';
+import {fromPgClient, fromPgPool, runTransaction} from '@ragedpanda/tx-retry';
 
 const pool = new pg.Pool();
 
@@ -71,7 +71,7 @@ await runTransaction(fromPgClient(client, {isolationLevel: 'repeatable read', re
 ### Kysely
 
 ```ts
-import {fromKysely, runTransaction} from 'tx-retry';
+import {fromKysely, runTransaction} from '@ragedpanda/tx-retry';
 
 await runTransaction(fromKysely(db.transaction().setIsolationLevel('serializable')), async trx => {
 	await trx.updateTable('stock').set(eb => ({count: eb('count', '-', 1)})).where('item', '=', item).execute();
@@ -81,7 +81,7 @@ await runTransaction(fromKysely(db.transaction().setIsolationLevel('serializable
 ### Drizzle
 
 ```ts
-import {fromDrizzle, runTransaction} from 'tx-retry';
+import {fromDrizzle, runTransaction} from '@ragedpanda/tx-retry';
 
 await runTransaction(fromDrizzle(db, {isolationLevel: 'serializable'}), async tx => {
 	await tx.update(stock).set({count: sql`${stock.count} - 1`}).where(eq(stock.item, item));
@@ -91,7 +91,7 @@ await runTransaction(fromDrizzle(db, {isolationLevel: 'serializable'}), async tx
 ### Prisma
 
 ```ts
-import {fromPrisma, runTransaction} from 'tx-retry';
+import {fromPrisma, runTransaction} from '@ragedpanda/tx-retry';
 
 await runTransaction(fromPrisma(prisma, {isolationLevel: 'Serializable'}), async tx => {
 	await tx.stock.update({where: {item}, data: {count: {decrement: 1}}});
@@ -103,7 +103,7 @@ Prisma reports write conflicts and deadlocks as `P2034`, which is retried.
 ### TypeORM
 
 ```ts
-import {fromTypeorm, runTransaction} from 'tx-retry';
+import {fromTypeorm, runTransaction} from '@ragedpanda/tx-retry';
 
 await runTransaction(fromTypeorm(dataSource, 'SERIALIZABLE'), async manager => {
 	await manager.decrement(Stock, {item}, 'count', 1);
@@ -116,7 +116,7 @@ await runTransaction(fromTypeorm(dataSource, 'SERIALIZABLE'), async manager => {
 
 ```ts
 import {DatabaseSync} from 'node:sqlite';
-import {fromSqlite, runTransaction} from 'tx-retry';
+import {fromSqlite, runTransaction} from '@ragedpanda/tx-retry';
 
 const db = new DatabaseSync('app.db');
 await runTransaction(fromSqlite(db, {mode: 'immediate'}), async db => {
@@ -131,7 +131,7 @@ await runTransaction(fromSqlite(db, {mode: 'immediate'}), async db => {
 `transact` is any function with this shape. Here it is for a mysql2 pool (an example; it is not run in the tests):
 
 ```ts
-import type {Transact} from 'tx-retry';
+import type {Transact} from '@ragedpanda/tx-retry';
 
 const fromMysqlPool = (pool: mysql.Pool): Transact<mysql.PoolConnection> => async work => {
 	const connection = await pool.getConnection();

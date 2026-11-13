@@ -45,10 +45,10 @@ jobs:
       - name: Check the version is on npm
         run: |
           for attempt in $(seq 1 30); do
-            npm view "tx-retry@${GITHUB_REF_NAME#v}" version --prefer-online > /dev/null 2>&1 && exit 0
+            npm view "@ragedpanda/tx-retry@${GITHUB_REF_NAME#v}" version --prefer-online > /dev/null 2>&1 && exit 0
             sleep 10
           done
-          echo "tx-retry@${GITHUB_REF_NAME#v} is not on npm after publishing. If npm staged it, approve it on npmjs.com, then re-run this job."
+          echo "@ragedpanda/tx-retry@${GITHUB_REF_NAME#v} is not on npm after publishing. If npm staged it, approve it on npmjs.com, then re-run this job."
           exit 1
       - name: Create the GitHub release
         run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file "$RUNNER_TEMP/release-notes.md" --verify-tag

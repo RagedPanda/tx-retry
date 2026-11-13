@@ -1,5 +1,5 @@
 {
-	"name": "tx-retry",
+	"name": "@ragedpanda/tx-retry",
 	"version": "0.1.0",
 	"description": "Retry a whole database transaction on serialization failures, deadlocks and busy errors, with backoff, AbortSignal and afterCommit hooks. Works with pg, Kysely, Drizzle, Prisma, TypeORM and SQLite",
 	"license": "MIT",
