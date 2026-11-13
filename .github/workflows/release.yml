@@ -27,12 +27,9 @@ jobs:
       # The tests use better-sqlite3, whose native module is built by its install script. Run that one
       # package's script only, so other dependencies still cannot run code at install time.
       - run: npm rebuild better-sqlite3
-      # Uses npm trusted publishing (OIDC) once it is set up on npmjs.com; until then, the NPM_TOKEN secret.
-      # A version already on npm is skipped, so a tag for a version published by hand, or a re-run, still
-      # creates the GitHub release.
+      # Uses npm trusted publishing (OIDC), so no token is stored anywhere. A version already on npm is
+      # skipped, so a tag for a version published by hand, or a re-run, still creates the GitHub release.
       - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           package="$(node -p "require('./package.json').name")@${GITHUB_REF_NAME#v}"
           if npm view "$package" version > /dev/null 2>&1; then
