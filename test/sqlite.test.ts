@@ -8,6 +8,7 @@ import BetterSqlite3 from 'better-sqlite3';
 import {fromSqlite, retryReason, runTransaction, type RetryEvent} from '../src/index.ts';
 
 const directory = mkdtempSync(join(tmpdir(), 'tx-retry-sqlite-'));
+// Windows cannot delete a database file that is still open, so every test closes its connections.
 after(() => rmSync(directory, {recursive: true, force: true}));
 
 let fileCount = 0;
@@ -81,7 +82,8 @@ test('node:sqlite: a real SQLITE_BUSY_SNAPSHOT reruns the whole transaction, whi
 });
 
 test('node:sqlite: an error that is not retryable rolls the transaction back', async () => {
-	const [database] = openPair();
+	const [database, unused] = openPair();
+	unused.close();
 	database.exec(`INSERT INTO items (name) VALUES ('taken')`);
 	await assert.rejects(
 		runTransaction(fromSqlite(database), async connection => {
@@ -96,7 +98,8 @@ test('node:sqlite: an error that is not retryable rolls the transaction back', a
 });
 
 test('node:sqlite: when the transaction already ended, the failed ROLLBACK is ignored and the original error kept', async () => {
-	const [database] = openPair();
+	const [database, unused] = openPair();
+	unused.close();
 	const failure = new Error('after an early COMMIT');
 	await assert.rejects(
 		runTransaction(fromSqlite(database), async connection => {
