@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-13
+
 ### Changed
 
 - Releases are published through npm trusted publishing (OIDC) instead of an npm token, so there is no long-lived token that could leak and publish a malicious version.
@@ -21,5 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `isRetryableError` and `retryReason`, which also look inside the wrappers of TypeORM, Drizzle, Sequelize and Prisma.
 - Adapters for node-postgres pools and clients (`fromPgPool`, `fromPgClient`), SQLite (`fromSqlite`, for `node:sqlite` and better-sqlite3), Kysely, Drizzle, Prisma and TypeORM.
 
-[Unreleased]: https://github.com/RagedPanda/tx-retry/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/RagedPanda/tx-retry/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/RagedPanda/tx-retry/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/RagedPanda/tx-retry/releases/tag/v0.1.0
